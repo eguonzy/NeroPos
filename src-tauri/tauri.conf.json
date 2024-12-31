@@ -1,0 +1,71 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "NeroPOS",
+  "version": "0.0.0",
+  "identifier": "com.tuto.app",
+  "build": {
+    "beforeDevCommand": "yarn dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "yarn build",
+    "frontendDist": "../dist"
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": ["https://github.com/eguonzy/tauri-mpos/releases/latest"],
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEIyNkM2MDc2NEUyMDhFRkEKUldUNmppQk9kbUJzc2xWV0dLWkxtbHZSV1orcGNGdm5uSUhJSDY0M3BCaU56SGd5L1JxL20ydXcK"
+    }
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "NeroPOS",
+        "width": 800,
+        "height": 800,
+        "center": true,
+        "visible": false
+      },
+      {
+        "width": 400,
+        "height": 400,
+        "center": true,
+        "decorations": false,
+        "url": "/public/splashscreen.html",
+        "label": "splashscreen",
+        "shadow": true
+      }
+    ],
+    "security": {
+      "csp": null,
+      "capabilities": [
+        {
+          "identifier": "main-capability",
+          "description": "Capability for the main window",
+          "windows": ["main"],
+          "permissions": [
+            "dialog:default",
+            "dialog:allow-ask",
+            "dialog:allow-message",
+            "dialog:allow-confirm",
+            "dialog:allow-save",
+            "dialog:allow-open",
+            "updater:default",
+            "updater:allow-check",
+            "updater:allow-download-and-install",
+            "updater:allow-install"
+          ]
+        }
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

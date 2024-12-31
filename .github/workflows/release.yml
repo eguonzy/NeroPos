@@ -1,0 +1,45 @@
+name: Build and Release Tauri App
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+
+      - name: Install Tauri CLI
+        run: yarn install -g @tauri-apps/cli
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Tauri app
+        run: yarn tauri build
+
+      - name: Upload MSI to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TAURI_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./src-tauri/target/release/bundle/msi/NeroPOS_0.0.0_x64_en-US.msi
+          asset_name: your-app-v${{ github.ref }}.msi
+          asset_content_type: application/x-msi

@@ -1,0 +1,123 @@
+@use "../../main.scss" as *;
+.auth-con {
+  padding: 10px;
+  // background: $dull-bg;
+  background-image: url("../../assets/franki-chamaki-ivfp_yxZuYQ-unsplash.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0, 0;
+
+  height: 100vh;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  label,
+  h3 {
+    color: #fff;
+  }
+  &__login-form {
+    box-shadow: $box-shadow;
+    width: 30%;
+    padding: 16px;
+    background: #69370281;
+
+    border-radius: 10px;
+    color: $primary;
+    color: #fff;
+    .input-con {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2em;
+      margin: 1em 0;
+      input {
+        font-size: 18px;
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid;
+      }
+    }
+    button {
+      padding: 5px;
+      width: 100%;
+      font-weight: bold;
+      font-size: 16px;
+      border-radius: 5px;
+      border: solid 2px;
+      border: none;
+      background-color: #fff;
+      cursor: pointer;
+      &:hover {
+        background-color: $primary;
+        color: #fff;
+      }
+    }
+  }
+}
+
+.load-entity-con {
+  background: linear-gradient(to right, #893f45, $dull-bg);
+  height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__form {
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: $box-shadow;
+    //  height: 40dvh;
+
+    width: 30vw;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    h3 {
+      color: #893f45;
+      font-weight: bold;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+      padding: 1em;
+      gap: 1em;
+      .input-con {
+        display: flex;
+        flex-direction: column;
+        //  margin: 10px 0 20px;
+        gap: 5px;
+        label {
+          color: #893f45;
+        }
+        input {
+          font-size: 20px;
+          padding: 5px;
+          border-radius: 5px;
+          border: solid 2px $primary;
+          transition: 0.5s ease;
+
+          &:focus-within {
+            outline: none;
+            border-color: $secondary;
+          }
+        }
+      }
+      button {
+        color: $primary;
+        font-size: 16px;
+        padding: 7px;
+        border-radius: 5px;
+        background-color: $dull-bg;
+        border: none;
+        cursor: pointer;
+        //     margin-top: auto;
+        &:hover {
+          background-color: #893f45;
+          color: #fff;
+        }
+      }
+    }
+  }
+}

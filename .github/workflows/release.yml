@@ -45,8 +45,8 @@ jobs:
             "pub_date": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
             "platforms": {
               "windows": {
-                "url": "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ github.repository }}_${{ github.ref_name }}_x64_en-US.msi",
-                "sig": "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/${{ github.repository }}_${{ github.ref_name }}_x64_en-US.msi.sig"
+                "url": "https://github.com/${{ github.repository.split('/')[1] }}/releases/download/${{ github.ref_name }}/${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi",
+                "sig": "https://github.com/${{ github.repository.split('/')[1] }}/releases/download/${{ github.ref_name }}/${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi.sig"
               }
             }
           }' > latest.json
@@ -57,8 +57,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/${{ github.repository }}_${{ github.ref_name }}_x64_en-US.msi
-          asset_name: ${{ github.repository }}_${{ github.ref_name }}_x64_en-US.msi
+          asset_path: ./src-tauri/target/release/bundle/msi/${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi
+          asset_name: ${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi
           asset_content_type: application/x-msi
 
       - name: Upload sig File to Release
@@ -67,8 +67,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/${{ github.repository }}_${{ github.ref_name }}_x64_en-US.msi.sig
-          asset_name: ${{ github.repository }}_${{ github.ref_name }}_x64_en-US.msi.sig
+          asset_path: ./src-tauri/target/release/bundle/msi/${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi.sig
+          asset_name: ${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi.sig
           asset_content_type: application/pgp-signature
 
       - name: Upload latest.json to Release

@@ -1,7 +1,7 @@
 {
   "name": "tuto",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "git-push":"git add . && git commit -m \"auto push\" && git push"
+    "git-push": "git add . && git commit -m \"auto push\" && git push"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",

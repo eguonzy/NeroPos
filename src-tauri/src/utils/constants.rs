@@ -6,7 +6,7 @@ lazy_static! {
 //https://msoln-server.onrender.com/
 
 lazy_static! {
-    pub static ref API: String = String::from("https://msoln-server.onrender.com/");
+    pub static ref API: String = String::from("http://localhost:8000/");
 }
 
 //localhost:

@@ -55,6 +55,17 @@ function SideBar() {
         });
     }
   };
+
+  const forceSync = async () => {
+    try {
+      await synchronize();
+      let result = await invoke("force_update", { entity: entity });
+      if (result === true)
+        notify("Force synchronization successful", { variant: "success" });
+    } catch (error) {
+      notify(error, { variant: "error" });
+    }
+  };
   useEffect(() => {
     setInterval(() => {
       synchronize();
@@ -138,12 +149,7 @@ function SideBar() {
       <div className="side-bar__item" onClick={() => synchronize()}>
         <p>Sync</p>
       </div>
-      <div
-        className="side-bar__item"
-        onClick={() => {
-          invoke("force_update", { entity: entity });
-        }}
-      >
+      <div className="side-bar__item" onClick={() => forceSync()}>
         <p>Force Sync</p>
       </div>
       <div

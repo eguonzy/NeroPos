@@ -37,9 +37,9 @@ jobs:
       - name: Upload MSI to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.TAURI_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/NeroPOS_0.0.0_x64_en-US.msi
+          asset_path: ./src-tauri/target/release/bundle/msi/your-app.msi
           asset_name: your-app-v${{ github.ref }}.msi
           asset_content_type: application/x-msi

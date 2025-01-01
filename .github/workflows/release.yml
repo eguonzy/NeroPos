@@ -17,6 +17,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
+      - name: Extract Repository Name
+        run: |
+          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+
+      - name: Print Repository Name
+        run: echo "Repository name is: $REPO_NAME"
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
@@ -38,6 +45,8 @@ jobs:
         run: yarn tauri build
 
       - name: Generate latest.json
+        env:
+            REPO_NAME: ${{ env.REPO_NAME }}
         run: |
           echo '{
             "version": "${{ github.ref_name }}",
@@ -45,8 +54,8 @@ jobs:
             "pub_date": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
             "platforms": {
               "windows": {
-                "url": "https://github.com/${{ github.repository.split('/')[1] }}/releases/download/${{ github.ref_name }}/${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi",
-                "sig": "https://github.com/${{ github.repository.split('/')[1] }}/releases/download/${{ github.ref_name }}/${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi.sig"
+                "url": "https://github.com/$REPO_NAME/releases/download/${{ github.ref_name }}/$REPO_NAME_${{ github.ref_name }}_x64_en-US.msi",
+                "sig": "https://github.com/$REPO_NAME/releases/download/${{ github.ref_name }}/$REPO_NAME_${{ github.ref_name }}_x64_en-US.msi.sig"
               }
             }
           }' > latest.json
@@ -54,26 +63,29 @@ jobs:
       - name: Upload MSI to Release
         env:
           GITHUB_TOKEN: ${{ secrets.NERO_SECRET }}
+          REPO_NAME: ${{ env.REPO_NAME }}
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi
-          asset_name: ${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi
+          asset_path: ./src-tauri/target/release/bundle/msi/$REPO_NAME_${{ github.ref_name }}_x64_en-US.msi
+          asset_name: $REPO_NAME_${{ github.ref_name }}_x64_en-US.msi
           asset_content_type: application/x-msi
 
       - name: Upload sig File to Release
         env:
             GITHUB_TOKEN: ${{ secrets.NERO_SECRET }}
+            REPO_NAME: ${{ env.REPO_NAME }}
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi.sig
-          asset_name: ${{ github.repository.split('/')[1] }}_${{ github.ref_name }}_x64_en-US.msi.sig
+          asset_path: ./src-tauri/target/release/bundle/msi/$REPO_NAME_${{ github.ref_name }}_x64_en-US.msi.sig
+          asset_name: $REPO_NAME_${{ github.ref_name }}_x64_en-US.msi.sig
           asset_content_type: application/pgp-signature
 
       - name: Upload latest.json to Release
         env:
             GITHUB_TOKEN: ${{ secrets.NERO_SECRET }}
+            REPO_NAME: ${{ env.REPO_NAME }}
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}

@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "git-push": "git add . && git tag -a v1.0.0 -m \"Release version 1.0.1\" && git commit -m \"auto push\" && git push"
+    "git-push": "git add . && git commit -m \"auto push\" && git push"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.5.0",

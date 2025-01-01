@@ -26,7 +26,7 @@ jobs:
           override: true
 
       - name: Install Tauri CLI
-        run: yarn install -g @tauri-apps/cli
+        run: yarn global add @tauri-apps/cli
 
       - name: Install dependencies
         run: yarn install

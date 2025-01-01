@@ -30,14 +30,17 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
-
+      
       - name: Build Tauri app
+        env: 
+        TAURI_SIGNING_PRIVATE_KEY: ${{secrets.TAURI_SIGNING_PRIVATE_KEY}}
+        TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD}}
         run: yarn tauri build
 
       - name: Upload MSI to release
         uses: actions/upload-release-asset@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.NERO_SECRET }}
           TAURI_SIGNING_PRIVATE_KEY: ${{secrets.TAURI_SIGNING_PRIVATE_KEY}}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD}}
 

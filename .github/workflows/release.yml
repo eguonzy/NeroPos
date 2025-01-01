@@ -17,6 +17,9 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: '16'
+          
+      - name: Debug Release Context
+        run: echo "${{ toJson(github.event) }}"
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1

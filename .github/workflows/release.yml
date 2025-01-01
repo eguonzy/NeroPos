@@ -37,7 +37,7 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD}}
         run: yarn tauri build
 
-     - name: Generate .sig File
+      - name: Generate .sig File
         run: |
           gpg --output ./src-tauri/target/release/bundle/msi/${GITHUB_REPOSITORY##*/}-${GITHUB_REF##*/}.msi.sig \
               --detach-sig ./src-tauri/target/release/bundle/msi/${GITHUB_REPOSITORY##*/}_${GITHUB_REF##*/}_x64_en-US.msi
@@ -46,6 +46,7 @@ jobs:
         run: |
           echo '{
             "version": "${GITHUB_REF##*/}",
+            "signature": "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF##*/}/${GITHUB_REPOSITORY##*/}_${GITHUB_REF##*/}_x64_en-US.msi.sig,
             "download": {
               "msi": "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF##*/}/${GITHUB_REPOSITORY##*/}_${GITHUB_REF##*/}_x64_en-US.msi",
               "sig": "https://github.com/${GITHUB_REPOSITORY}/releases/download/${GITHUB_REF##*/}/${GITHUB_REPOSITORY##*/}_${GITHUB_REF##*/}_x64_en-US.msi.sig"

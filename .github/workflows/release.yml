@@ -64,7 +64,7 @@ jobs:
           asset_name: ${GITHUB_REPOSITORY##*/}_${GITHUB_REF##*/}_x64_en-US.msi
           asset_content_type: application/x-msi
 
-      - name: Upload .sig File to Release
+      - name: Upload sig File to Release
         env:
             GITHUB_TOKEN: ${{ secrets.NERO_SECRET }}
         uses: actions/upload-release-asset@v1

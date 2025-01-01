@@ -56,8 +56,8 @@ jobs:
             "pub_date": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
             "platforms": {
               "windows": {
-                "url": "https://github.com/$REPO_NAME/releases/download/${{ github.ref_name }}/$REPO_NAME_${{ github.ref_name }}_x64_en-US.msi",
-                "sig": "https://github.com/$REPO_NAME/releases/download/${{ github.ref_name }}/$REPO_NAME_${{ github.ref_name }}_x64_en-US.msi.sig"
+                "url": "https://github.com/${{github.repository}}/releases/download/${{ github.ref_name }}/$REPO_NAME_${{ github.ref_name }}_x64_en-US.msi",
+                "sig": "https://github.com/${{github.repository}}/releases/download/${{ github.ref_name }}/$REPO_NAME_${{ github.ref_name }}_x64_en-US.msi.sig"
               }
             }
           }' > latest.json

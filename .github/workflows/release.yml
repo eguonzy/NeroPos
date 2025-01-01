@@ -50,8 +50,12 @@ jobs:
           asset_name: your-app-v${{ github.ref }}.msi
           asset_content_type: application/x-msi
         
+      - name: Upload .sig File to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./src-tauri/target/release/bundle/msi/your-app.msi.sig
-          asset_name: your-app-v${{ github.ref }}.msi.sig
+          asset_name: your-app-v${{ github.ref_name }}.msi.sig
           asset_content_type: application/pgp-signature

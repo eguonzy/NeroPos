@@ -1,9 +1,9 @@
 name: Build and Release Tauri App
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types:
+      - published 
 
 jobs:
   build:
@@ -49,3 +49,9 @@ jobs:
           asset_path: ./src-tauri/target/release/bundle/msi/your-app.msi
           asset_name: your-app-v${{ github.ref }}.msi
           asset_content_type: application/x-msi
+        
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./src-tauri/target/release/bundle/msi/your-app.msi.sig
+          asset_name: your-app-v${{ github.ref }}.msi.sig
+          asset_content_type: application/pgp-signature

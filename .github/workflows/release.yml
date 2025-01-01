@@ -23,6 +23,8 @@ jobs:
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
 
       - name: Print Repository Name
+        env:
+            REPO_NAME: ${{ env.REPO_NAME }}
         run: echo "Repository name is: $REPO_NAME"
 
       - name: Install Rust

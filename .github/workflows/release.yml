@@ -45,8 +45,8 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD}}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/your-app.msi
-          asset_name: your-app-v${{ github.ref }}.msi
+          asset_path: ./src-tauri/target/release/bundle/msi/NeroPOS_1.0.1x64_en-US.msi
+          asset_name: NeroPOS-v${{ github.ref }}.msi
           asset_content_type: application/x-msi
         
       - name: Upload sig File to Release
@@ -55,6 +55,6 @@ jobs:
           GITHUB_TOKEN: ${{secrets.NERO_SECRET }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/your-app.msi.sig
-          asset_name: your-app-v${{ github.ref_name }}.msi.sig
+          asset_path: ./src-tauri/target/release/bundle/msi/NeroPOS_1.0.1x64_en-US.msi.sig
+          asset_name: NeroPOS-v${{ github.ref_name }}.msi.sig
           asset_content_type: application/pgp-signature

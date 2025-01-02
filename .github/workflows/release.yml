@@ -26,20 +26,67 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: '16'
 
-      - name: install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
         with:
-          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
-          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+          toolchain: stable
+          profile: minimal
+          override: true
 
-      - name: install frontend dependencies
-        run: yarn install # change this to npm, pnpm or bun depending on which one you use.
+      - name: Install Tauri CLI
+        run: yarn global add @tauri-apps/cli
 
-      - uses: tauri-apps/tauri-action@v0
+      - name: Install dependencies
+        run: yarn install
+      
+
+
+      - name: Build Tauri app
+        env: 
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        run: yarn tauri build
+
+      - name: Generate latest.json
+        run: |
+          echo '{
+            "version": "${{ github.ref_name }}",
+            "notes": "Release notes for version ${{ github.ref_name }}",
+            "pub_date": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
+            "platforms": {
+              "windows": {
+                "url": "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/NeroPOS_${{ github.ref_name }}_x64_en-US.msi",
+                "sig": "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/NeroPOS_${{ github.ref_name }}_x64_en-US.msi.sig"
+              }
+            }
+          }' > latest.json
+
+      - name: Upload MSI to Release
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./src-tauri/target/release/bundle/msi/NeroPOS_${{ github.ref_name }}_x64_en-US.msi
+          asset_name: NeroPOS_${{ github.ref_name }}_x64_en-US.msi
+          asset_content_type: application/x-msi
+
+      - name: Upload sig File to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./src-tauri/target/release/bundle/msi/NeroPOS_${{ github.ref_name }}_x64_en-US.msi.sig
+          asset_name: NeroPOS_${{ github.ref_name }}_x64_en-US.msi.sig
+          asset_content_type: application/pgp-signature
+
+      - name: Upload latest.json to Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        uses: actions/upload-release-asset@v1
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: "App v__VERSION__"

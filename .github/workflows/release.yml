@@ -16,6 +16,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
+          - platform: "macos-latest" # for Arm based macs (M1 and above).
+            args: "--target aarch64-apple-darwin"
+          - platform: "macos-latest" # for Intel based macs.
+            args: "--target x86_64-apple-darwin"
+          - platform: "ubuntu-22.04" # for Tauri v1 you could replace this with ubuntu-20.04.
+            args: ""
           - platform: "windows-latest"
             args: ""
 
@@ -26,67 +32,28 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: lts/*
 
-      - name: Install Rust
-        uses: actions-rs/toolchain@v1
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
-          profile: minimal
-          override: true
+          # Those targets are only used on macos runners so it's in an `if` to slightly speed up windows and linux builds.
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
 
-      - name: Install Tauri CLI
-        run: yarn global add @tauri-apps/cli
-
-      - name: Install dependencies
-        run: yarn install
-      
-
-
-      - name: Build Tauri app
-        env: 
-          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
-          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
-        run: yarn tauri build
-
-      - name: Generate latest.json
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04' # This must match the platform value defined above.
         run: |
-          echo '{
-            "version": "${{ github.ref_name }}",
-            "notes": "Release notes for version ${{ github.ref_name }}",
-            "pub_date": "$(date -u +'%Y-%m-%dT%H:%M:%SZ')",
-            "platforms": {
-              "windows": {
-                "url": "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/NeroPOS_${{ github.ref_name }}_x64_en-US.msi",
-                "sig": "https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/NeroPOS_${{ github.ref_name }}_x64_en-US.msi.sig"
-              }
-            }
-          }' > latest.json
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+        # webkitgtk 4.0 is for Tauri v1 - webkitgtk 4.1 is for Tauri v2.
+        # You can remove the one that doesn't apply to your app to speed up the workflow a bit.
 
-      - name: Upload MSI to Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/NeroPOS_${{ github.ref_name }}_x64_en-US.msi
-          asset_name: NeroPOS_${{ github.ref_name }}_x64_en-US.msi
-          asset_content_type: application/x-msi
+      - name: install frontend dependencies
+        run: yarn install # change this to npm, pnpm or bun depending on which one you use.
 
-      - name: Upload sig File to Release
+      - uses: tauri-apps/tauri-action@v0
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./src-tauri/target/release/bundle/msi/NeroPOS_${{ github.ref_name }}_x64_en-US.msi.sig
-          asset_name: NeroPOS_${{ github.ref_name }}_x64_en-US.msi.sig
-          asset_content_type: application/pgp-signature
-
-      - name: Upload latest.json to Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        uses: actions/upload-release-asset@v1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: app-v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version.
           releaseName: "App v__VERSION__"

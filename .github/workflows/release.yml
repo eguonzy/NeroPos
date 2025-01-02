@@ -20,14 +20,17 @@ jobs:
 
           
       - name: Extract Repository Name
+        shell: pwsh
         run: |
-          REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+          $repo = '${{ github.repository }}'
+          $REPO_NAME = $repo.Split('/')[1]
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
 
       - name: Verify GITHUB_ENV
-        run: |
-          echo "Contents of GITHUB_ENV:"
-          cat $GITHUB_ENV
+        run: type $env:GITHUB_ENV
+
+      - name: Print Repository Name
+        run: echo "Repository name is: $env:REPO_NAME
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1

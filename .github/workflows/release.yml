@@ -18,19 +18,6 @@ jobs:
         with:
           node-version: '16'
 
-          
-      - name: Extract Repository Name
-        shell: pwsh
-        run: |
-          $repo = '${{ github.repository }}'
-          $REPO_NAME = $repo.Split('/')[1]
-          echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
-
-      - name: Verify GITHUB_ENV
-        run: |
-          echo "Contents of GITHUB_ENV:"
-          cat $GITHUB_ENV
-
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:

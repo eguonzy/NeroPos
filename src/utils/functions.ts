@@ -3,12 +3,13 @@ import { ask, message } from "@tauri-apps/plugin-dialog";
 import { invoke } from "@tauri-apps/api/core";
 
 export async function checkForAppUpdates(onUserClick: boolean = false) {
-  message("Checking for update, please wait..", {
+  message("Checking for update, please wait...", {
     kind: "info",
     title: "Update",
   });
   try {
-    const update = await check();
+    const update = await check({});
+    console.log(update);
     if (update === null) {
       await message("Failed to check for updates.\nPlease try again later.", {
         title: "Error",
@@ -41,6 +42,7 @@ export async function checkForAppUpdates(onUserClick: boolean = false) {
       });
     }
   } catch (error) {
+    console.log(error);
     message(error, { kind: "error" });
   }
 }

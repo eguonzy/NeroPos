@@ -27,7 +27,9 @@ jobs:
           echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
 
       - name: Verify GITHUB_ENV
-        run: type $env:GITHUB_ENV
+        run: |
+          echo "Contents of GITHUB_ENV:"
+          cat $GITHUB_ENV
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1

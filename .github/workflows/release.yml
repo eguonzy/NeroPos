@@ -24,7 +24,7 @@ jobs:
 
       - name: Print Repository Name
      
-        run: echo "Repository name is: ${{ github.REPO_NAME }}"
+        run: echo "Repository name is: ${{ env.REPO_NAME }}"
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
